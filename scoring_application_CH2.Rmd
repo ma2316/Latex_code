@@ -1,0 +1,575 @@
+---
+title: "Chapitre 2  Méthodes probabilité"
+author: "Youming"
+date: "2023-09-13"
+header-includes:
+  - \usepackage{ctex}
+output: 
+  pdf_document:
+    latex_engine: xelatex
+---
+
+## 背景 Constexte et objectifs 
+
+有$n$组$(x_i,z_i)$\\
+$x_i$是变量\\
+$z_i$是组，若$z_i = 1$，则$x_i$在$G$组。\\
+
+## 目的 L'objectif  
+Affecter à l'une des classes un nouvel individu $X_{n+1} \in X$ dont on ignore $z_{n+1}$
+
+## 方法 La méthode 
+
+> Définir ```G``` scores par chaque $S_g:x\rightarrow R$ permettant d'affecter $x_{n+1}$ selon une règle du type (par maximiser de score)
+
+$$
+\hat z_{n+1,g} = 1 \Leftrightarrow  S_g(X_{n+1}) = \max \{S_j(X_{n+1}); j = 1,...,G\} 
+$$
+
+
+### \textcolor{orange}{Analyse Discriminante (AD) probabiliste}
+
+#### \textcolor{orange}{Modèle :}  
+
+\textcolor{orange}{On supose que :}
+
+\textcolor{orange}{
+  \begin{itemize}
+    \item $\{x,z\}$互相独立:les coupls $(x_i, z_i)$ sont des réalisation indépendants de $(x, z)\in X_{x \{0;1\}^G}$\\
+    \item $z \sim M_G(1; \pi_1, \pi_2 ...\pi_G)$\\
+    \begin{itemize}
+      \item 他的参数(essai de paramètre)是： $\{\pi_1, \pi_2 ...\pi_G\}$\\
+      \begin{itemize}
+        \item[] $\pi_g >0$ 且 $\sum^G_{g=1} z_g =1$\\
+      \end{itemize}
+      \item \Rightarrow 以N = 1 和$\{\pi_1, \pi_2 ...\pi_G\}$ 为参数的 La loi Multi-Normale à l'ordre de G $M_G(N; \pi_1, \pi_2 ...\pi_G)$\\
+    \end{itemize}
+    \item 在给定条件 $z_i g = 1$ 下，条件向量 $x$ 的分布是由一个以 $x$ 为支持（即可能取值的范围）的概率分布所描述，这个概率分布的概率密度函数是 $f_g(*; \theta_g)$，其中 $\theta_g$ 是分布的参数。\\
+    \begin{itemize}
+      \item 概率密度函数 $f_g(*; \theta_g)$ 通常属于相同的概率分布家族，选择概率分布家族的具体形式可能会依赖于数据的性质。\\
+    \end{itemize}
+    \item $y_i = \alpha n_i +b + \varepsilon$ d'où $(\varepsilon \sim N(0,1))$\\
+    \item $z \sim M_G (1; \pi_1, \pi_2 ...\pi_G)$ -->Loi multinomiale d'ordre G de paramètre $N = 1 et \ \pi = (\pi_1;.... ; \pi_G) \Rightarrow M(N;(\pi_1;.... ; \pi_G)$\\
+    \item[] le 1 c'est une individu qu'on choisir et c'est une compossante, est tous les composant vaut 0
+    \item $(x|Z_y = 1) \sim  f_g(*; \theta_g) =$ Fonction de probabilité  de descropteur dans la classe g 
+    \item[] Pappel : $y = (y_1;...;y_k)' \sim M_k (N; \pi_1,...,\pi_K)$ sinifie :
+    \begin{itemize}
+      \item $y$ prend se valeur dans $\{(n_1; n_2, ..., n_k)' \in N^K$
+      \item[] $\sum^K_{k = 1} =N$
+      \item[] $$P(y = (n_1, n_2,...,n_k)') = \frac{N!}{n_1 ! n_2 !...n_k ! \Pi^k_{j=1}\pi_j n_j}$$
+    \end{itemize}
+  \end{itemize}
+}
+
+
+![](/Users/youmingma/Desktop/M2段乐瑶笔记/风险探测coring_applique_detection_risque/photo/IMG_1FC2FBB10C54-1.jpeg)
+Donc on préfère **loi de student** parce que elle est plus épais que ceci.
+
+## La méthode : 
+\textcolor{red}{
+  \begin{itemize}
+    \item On va estimer la paramétrie $\theta$\\
+    \item [] Maximum de vraisemblance最大似然估计
+    \item [] $\theta = (\pi_1,...\pi_\theta, \theta_1,...,\theta_G)$
+    \begin{itemize}
+      \item $\pi_1,...\pi_\theta$ : poids de classe
+      \item $\pi_g$ : proba d'appartien à la classe g
+      \item[] $\pi_g = P(z_g = 1)$
+      \item $\theta_1,...,\theta_G$ : Parametre des fonction probabilité conditionnelle条件概率函数的参数.
+    \end{itemize}
+  \end{itemize}
+}
+
+### 理解：
+\textcolor{magenta}{
+  \begin{itemize}
+    \item 不分组
+    \begin{itemize}
+      \item 分布依赖同一个参数$\theta$
+      \item [] 似然数：$$L(\theta) = \Pi^n_{j = 1} P(x_j \in A_j \vert \theta)$$
+      \item [] 对数似然数$$l(\theta) = \sum^n_{j=1} \ln f_x(x_j\vert \theta)$$
+    \end{itemize}
+    \item 分组数据情况，也就是这节课的情况：
+    \begin{itemize}
+      \item 选出一组数据，现成题中的数据。$\{c_0, c_1,...,c_j\}$
+      \item $n_j$是区间$(c_j-1,c_j]$的观测数目。
+      \item [] 似然数：$$L(\theta) = \Pi_{j=1}^k \Big [F(c_j\vert \theta)-F(c_{j-1}\vert \theta])\Big )]^{z_{i,g}}$$
+      \item 老师的版本，其实是一样的 : $L(\theta) = \Pi_{i=1}^n\Pi_{i=1}^G \Big[\pi_g f_g(i ; \theta_g) \Big ]^{z_{i,g}}$
+      \item $l(\theta) = \ln(L(\theta))$ ，老师的是$l(\theta) = \log(L(\theta))$细细品
+    \end{itemize}
+    \item 令$\frac{\partial l(\theta)}{\partial\theta} = 0$ 得到 $\theta$.
+  \end{itemize}
+}
+
+
+\textcolor{purple}{\textbf{Par exemple:}}
+
+\textcolor{purple}{Si la classe g est gaussienne,
+$$
+\theta_y = (\underbrace {\mu_g}_{centre\ de\ classe\ g,\ covarrience\ de\ class};\sum g)
+$$
+Dans ce cours , on estime par Maximiser de Vraisemblence (MV)
+$$
+\hat \theta = \arg \max_\theta \bigg \{ l\Big (\theta;\{x_i,x_z\}\Big ) = log \Big \{ \Pi^n_{i=1} \Pi^G_{g=1} \big [ \pi_g f_g (x_i ; \theta_g ) \big ] ^{z_{i,g}} \Big \}\bigg \}
+$$
+On estime la Probabilité pour $x_{n+1}$ de partenir à la classe g par le score :
+$$
+\Pi(Z_{n+1,g}=1 \vert X_{n+1}) = t_g(X_{n+1}) =\frac {\hat \Pi_g f_g(X_{n+1}, \hat \theta_g)}{\sum^G _{j=1} \hat \Pi_j f_j (X_{n+1}; \hat \theta_j)}
+$$
+}
+
+**Explication**
+
+- Que représente le score, la variable $z_{n+1,g}\in \{0,N\}$ suite \textcolor{brown}{\textbf{une lois de Bernoilli}} de paramettre : 
+
+\textcolor{gray}{
+  \begin{itemize}
+    \item Rapelle : 
+    \begin{itemize}
+      \item[] $$P(X=x) = \begin{cases} p & \text{si } x = 1 \\1-p & \text{si } x = 0\end{cases}$$
+      \item[] $$P(X-x) = p^x(1-p)^{1-x};\\x\in \{0,1\}$$
+    \end{itemize}
+  \end{itemize}
+}
+
+$$
+\begin{aligned}
+\Pi(z_{n+1,g} = 1 \vert X_{n+1}) & = \frac{\Pi(X_{n+1} \vert Z_{n+1,g}=1 ) \times \Pi(Z_{n+1,g} = 1 )}{\Pi(x_{n+1})}\\
+\\
+& = \frac{\Pi(X_{n+1} \vert Z_{n+1,g} =1 ) \times \Pi(Z_{n+1,g}=1 )}{\sum^G_{j=1}\Pi(X_{n+1} \vert Z_{n+1,g} =1)\Pi(Z_{n+1,g}=1)}\\
+\\
+& = \frac{f_g ((X_{n+1} \hat \theta_g)\hat \theta_g}{\sum^G_{j=1} f_i ((X_{n+1} \hat \theta_j)}\\
+\\
+& = E(Z_{n+1,g} \vert X_{n+1})
+\end{aligned}
+$$
+
+- On affecte $X_{n+1}$ à la classe ```g``` dans laquelle il a le plus de chance de se trouver : 
+
+$$
+\hat Z_{n+1} = g \Leftrightarrow \forall_j \in \{1,...,G\}\ \ \ \   \ \ \ \  Z_j(X_{n+1})≤Z_g(X_{n+1})
+$$
+
+### Choix de modèle : 
+La classe estimer de $x_{n+1}$ dépend des fonctions de probabilité conditionnelle $f_g(•;\theta_g)$ choisi et de l'espace $\Theta$ du paramettre $\theta$
+
+![](/Users/youmingma/Desktop/M2段乐瑶笔记/风险探测coring_applique_detection_risque/photo/IMG_48B53D56C0F9-1.jpeg){width=400}
+
+![](/Users/youmingma/Desktop/M2段乐瑶笔记/风险探测coring_applique_detection_risque/photo/IMG_92F2CA461953-1.jpeg){width=400}
+
+
+### Comment choisir un modèle ?  
+
+- Le créteurs d'information 赤池信息准则（AIC）, 贝叶斯信息准则（BIC） ,... ( propres aux modèle paramétrique au semi-problématique)
+
+**Dans ce cours**
+
+$$
+\begin{aligned}
+BIC & : -2l\Big ( \hat \theta ; \{ (x_i;z_i\}\Big ) + \frac {\eta}{2} \log (n)\\
+AIC & : -2l\Big ( \hat \theta ; \{ (x_i;z_i\}\Big ) + \eta
+\end{aligned}
+$$
+
+où $\eta$ = dimension du paramètre 模型的自由参数个数( nombre de corspante libre alqélquiloriquement )
+
+NB :  La vrai définition de BIC = $-2l\Big ( \hat \theta ; \{ (x_i;z_i\}\Big ) +  \eta \log (n)$
+
+Il y a des version différent dans vertain cours.
+
+
+\textcolor{violet}{
+  \begin{itemize}
+    \item BIC
+    \item[] 倾向于选择拟合较好但参数较少的模型，BIC的应用通常是比较不同模型的BIC值，选择具有最低BIC值的模型作为最优模型。BIC在避免过拟合的同时鼓励选择具有良好拟合能力的模型。注意：在小样本情况下，BIC更倾向于选择参数更少的模型，而在大样本情况下，它更倾向于选择能够更好拟合数据的模型。因此，在使用BIC时，需要根据具体问题和数据规模谨慎选择。
+    \item AIC
+    \item[] 与BIC不同，AIC的惩罚项只包含了2倍自由参数的数量，而不像BIC那样与自由参数的数量成正比。这使得AIC在模型选择时更倾向于选择包含稍多一些参数但能更好拟合数据的模型。选择具有最低AIC值的模型作为最优模型。
+  \end{itemize}
+}
+
+**L'erreur de classement**
+
+$$
+\hat \varepsilon = \sum ^G _{g=1} \hat \Pi _g \int_{\{x\in X; \hat Z_g ≠ 1\}}f_g(X_i;\hat \theta_g)dx
+$$
+
+![](/Users/youmingma/Desktop/M2段乐瑶笔记/风险探测coring_applique_detection_risque/photo/IMG_9EF3726F6AE2-1.jpeg)
+
+Justification de la formule avec G =2 classe 
+
+$$
+\begin{aligned}
+\hat \varepsilon & = \pi(erreur) \\
+& = \sum ^G _{g=1} (Classer\ x\ dans\ g\ et\ x\ n'appartient\ pas\ à\ g)\\
+& =\pi \Bigg ( \Big [ (\hat z_2 =1) \cap (z_1 = 1)\Big ]   \cup  \Big[ (\hat z_1 ) \cap (z_2 =1) \Big]\Bigg )
+\end{aligned}
+$$
+
+
+$$
+\begin{aligned}
+P(\hat z_2 & =1 \vert z_1 =1)P(z_1=1)+P(\hat z_1 =1 \vert z_2 =1)P(z_1=1)\\
+& = \int_{\{x\in X, \hat z_2 =1\}} f (x; \hat \theta_1 )dx \hat \Pi_1 +\int_{\{x\in X, \hat z_1 =1\}} f (x; \hat \theta_2 )dx \hat \Pi_2 
+\end{aligned}
+$$
+
+
+## 3. Analyse dscriminante probabiliste en pratique 
+
+On calcule plusieur modèles celui qui minimise l'erreur de classement.
+
+Selon les données auquel'on a fait ( stndard | bruitées | grand dimension etc) 
+
+On adopte un modèle (Gaussienne, studient,...)
+
+A savoir faire dans un contexte professionel :  
+- Trouver la libraire à utilisés
+- interpréter le modèle utilisé avec le doc en ligne
+- appprter une solution ADP au problème posé
+
+## 4. Analyse Discriminants Gaussienne 
+
+
+Le context des données sont continus : $(X = R^d)$
+
+On supposse que les loi conditionnlells sont des Gaussienne d-dimiensionelle
+$$
+f_g (x: \theta_g) = \frac {1}{\sqrt {2 \pi}}\frac{1}{\sqrt {\lvert \sum _g \rvert}} \exp \Big \{ - \frac {1}{2}(x- \mu g)' \sum _g ' (x-\mu g)\Big \}\ où\ x \in R^d
+$$
+
+
+$$
+\mu_g \in R^d : le\ centre\ de\ la\ classe\ g\\
+$$
+
+$$
+\sum _g \in R^{d\times d}\ SDP: La\ matrice\ de\ covarrance\ de\ la\ claasse\ g\\
+$$
+
+$$
+\Theta_g = (\mu_g; \sum_g)
+$$
+
+
+
+### Estimation des Maximum de vraisemblances :  
+
+Remark : Dimention $(\mu_g) = d$;         dimention $(\sum_g) = \frac{d(d+1)}{2}$
+
+**Choix\ de\ modèle : **
+$$
+\hat \sum_g = \left \{ \begin{aligned}
+& \sum^n_{i=1}z_{i,g}(X_i-\hat \mu_g)(X_i-\hat \mu_g)'/n_g\\  
+& heténoscédastique\ (le\ matrice\ de\ covariance\ sont\ libre) \\
+& \sum^G_{g=1}\sum^n_{i=1}z_{i,g}(X_i-\hat \mu_g)(X_i-\hat \mu_g)(X_i-\hat \mu_g)'/n\\ 
+& honoscédastique\ (la\ matrices\ sont\ égals)
+\end{aligned}\right.
+$$
+
+*Addition : Matrice de Toeplitz*  
+
+[](/Users/youmingma/Desktop/M2段乐瑶笔记/风险探测coring_applique_detection_risque/photo/IMG2023-09-14.png)
+
+
+## Exercice : simple à la main
+|Client|Flux|Solcable|
+|:---|:---|:---|
+|1|3|N|
+|2|4|N|
+|3|5|N|
+|4|5|o|
+|5|6|o|
+|6|7|o|
+|7|9|o|
+|8|5|o|
+
+M. Li est un nouveau client, est-il solvable (o) ou non (N) sachant que son flux est 5,2?
+
+*Le modèle :*
+
+> * Solvable : Classe 1
+> * Non solvable : Classe 2
+> x = Le flux 
+
+$$
+(x \vert Classe 1)\sim f_1(x;\theta_1) = \frac {1}{\sqrt{2\pi}}\frac{1}{\sigma_1}\exp \big ( \frac{1}{2}(\frac{x-\mu_1}{\sigma_1})^2\big ) = f_1(X_i;\theta_1)\\ \\
+Avec\ \theta_1 = (\mu_1; \sigma_1)\\
+$$
+
+
+$$
+(x \vert Classe 2)\sim f_1(x;\theta_2) = \frac {1}{\sqrt{2\pi}}\frac{1}{\sigma_2}\exp \big ( \frac{1}{2}(\frac{x-\mu_2}{\sigma_2})^2\big ) = f_2(X_i;\theta_2)\\ \\
+Avec\ \theta_2 = (\mu_2; \sigma_2)\\
+$$
+
+
+$$
+\pi(Classe1) = \pi_1\ \ \ \ \ \ \ \ \pi(Classe2) = \pi_2
+$$
+
+***Estimation de maramètre***
+
+|Classe| Poid| Centre| Variance|
+|:---|:---|:---|:---|
+|g = 1|$\hat \pi_1 = 5/8$|$\hat \mu_1 =6.4$|$\hat \sigma_1^2 = 2.24$|
+|g = 2|$\hat \pi_2 = 3/8$|$\hat \mu_2 =4.0$|$\hat \sigma_2^2 = 0.67$|
+
+***Calculer des scores***
+
+$$
+t_1(L_i) = \frac{\hat \pi_1 f_1 (5.2; \hat \sigma_1)}{\sum^2_{j=1}\hat \pi_j f_j (5.2; \hat \sigma_j)} = 0.66\\
+$$
+
+
+
+$$
+t_2(L_i) = \frac{\hat \pi_2 f_2 (5.2; \hat \sigma_2)}{\sum^2_{j=1}\hat \pi_j f_j (5.2; \hat \sigma_j)} = 0.34\\
+$$
+
+***Décision***
+
+$$t_1(L_i)>t_2(L_i)$$
+
+Donc, en affecte M.Li à la classe 1 (solvable).
+```{r}
+data = data.frame(x = c(3,4,5,5,6,7,9,5), z= c(2,2,2,1,1,1,1,1))
+attach(data)
+library(Rmixmod)
+learn <- mixmodLearn(data$x,knownLabels = as.factor(data$z), models = mixmodGaussianModel(listModels = c('Gaussian_pk_Lk_Ck')), criterion = 'BIC')
+# knowLabels pour lui apprend que c'est d'une flux 
+learn
+```
+[Voici le doccier, chercher le mot 'BIC' pour trouver la formul](/Users/youmingma/Desktop/M2段乐瑶笔记/风险探测coring_applique_detection_risque/课外资料d/Dossier_correspendant1.pdf)
+
+```{r}
+new <-  data.frame(x = c(5.2))
+prédiction <- mixmodPredict(data = new, classificationRule = learn['bestResult'])
+prédiction
+```
+
+
+***Exercice*** :  On considère les données finance de Rmixmid. à quelle classe d'entreprise healthy|banckrucy affectez-vous la première entreprise de 2003 par une méthode d'AD gaussienne bassé sur l'entreprise de 2002.
+
+```{r}
+data("finance")
+head(finance)
+```
+
+```{r}
+unique(finance$Year)
+```
+
+
+```{r}
+train = finance[finance$Year == '2002',3:6]
+ztrain = finance[finance$Year == '2002', 2]
+head(train)
+```
+
+```{r}
+head(ztrain)
+```
+
+
+```{r}
+learn <- mixmodLearn(train,knownLabels = as.factor(ztrain), models = mixmodGaussianModel(listModels = c('Gaussian_pk_Lk_Ck')), criterion = 'BIC')
+learn
+```
+
+```{r}
+nrow(train)
+```
+
+```{r}
+sum(ztrain == 'bankruptcy')/428
+# Pour retrouver le codage de classes en comparant les proportion mais on ne pourra le faire à chaque fois si le proportion sont le même par exemple.
+```
+
+
+
+```{r}
+plot(train, col = as.factor(ztrain))
+```
+
+```{r}
+new <- finance[finance$Year =='2003', 3:6][1,]
+prédiction <- mixmodPredict(data = new, classificationRule = learn['bestResult'])
+prédiction
+```
+
+
+Elle est dans le classe 1, $t_1 = 0.5725$ et $t_2 = 0.4275$
+
+Question subsidiaine 
+L'AD Conssionnne hétéroscélastique (Gaussin_pk_Lk_Ck) affect la 1ière ebtreeprise de 2003 à la classe bankrucptcy avec probabilité 0.5725
+
+> Que dire de la classe de cette entrerprise en AD Gaussienne homoscédastique (Gaussinne_pk_Lk_Ck) 
+> Lequel des deux modèle homoscélasticique /hétéscélasticisituque le créteur BIC préfère-t-il?
+
+||Proba Bankcuryty healty |BIC|
+|:---|:---|:---|
+|Gaussien Homoscédastique|5.5476    vs    0.4524|760/2|
+|Gaussien Hétéscédastique|0.5725    vs    0.4275|792/2|
+
+Si on droit choisir un le plus grand, c'est à dire le deuxième 
+
+
+21092023
+8. Reregression logistique  (RL)
+
+On suppose le observation répation en deux classe et les descriptoon condition la RL peut être à plus de deux classe : Voir CH2 REF 6 p196
+
+Objectif : obtenir une fonction discriminante somple (linéaire) avec un modèle semi paramétrique ( économie en paremets)
+
+On reprend le nature de 2
+
+Etant donné $x  = (x1;...;x_d)' \in R^d$ on souhaite estimer la classe $z = (z_1,z_2) \in {0,1}^2$ de x
+
+Le modème : $p ( z_1 = 1 | x) = \frac {e^{\beta' x + \alpha}}{1 + e^{\beta'x + \alpha}}$ avec $\beta=(\b_1;...;\beta d)' \in R^d \alpha \in R$
+Le modèle : S(x) = \beta'x + \alpha 
+
+La regression de classement 
+
+$$
+\begin{aligned}
+\hat z_1 = 1 &\leftrightarrow S(x)>0 &\leftrightarrow P(Z_1 = 1) > 1/2\\
+\hat z_2 = 1 &\leftrightarrow S(x)≤0 &\leftrightarrow P(Z_2 = 1) ≥ 1/2\\
+\end{aligned}
+$$
+**Justification : **
+
+$$
+P(Z_1 = 1 \vert x) > 1/2  \leftrightarrow \frac {e^{s(x)}}{1+e^{s/x_1}} > \frac{1}{2}
+$$
+
+$$
+\begin{aligned}
+2e^{s(x)} &> 1+ e^{s/x_1}\\
+e^{s(x)} &> 1\\
+S(x) &>0
+\end{aligned}
+$$
+
+La fonction discriminante $\{n\in R^d; S(x) = 0 \}$ effet confiance
+
+Estimation du paramétrique : $\theta = (\alpha, \beta)' \in R^{d+1}$
+
+Vraisemblance de $\theta$ :
+
+$$
+\begin{aligned}
+P(\theta;\{(x;z_i);i : 1,...,n\}) &= \Pi^n_{i=1} \big [p ( z_{i,1} = \frac{1}{x_i})\big ]^{z_{i,1}}\big [p ( z_{i,2} = \frac{1}{x_i})\big ]^{z_{i,2}}\\
+& = \Pi^n_{i=1}\Bigg[\frac{\exp (\beta' x_i+\alpha)}{1+\exp(\beta'X_i+\alpha)}\Bigg]^{z_{i,1}} \Bigg[\frac{1}{1+\exp(\beta'X_i+\alpha)}\Bigg]^{z_{i,2}}\\
+&= \Pi^n_{i=1}\frac{\exp(\beta' x_i+\alpha)^{z_{i,1}}}{1+\exp(\beta'X_i+\alpha)}
+\end{aligned}
+$$
+
+La log vraisemblance de $\delta$ 
+
+$$
+P = (\theta,\{ 1;z_i\}; i = 1,...,n) = \sum^n_{i=1}\Big \{z_{i,1}(\beta' x_i+\alpha)- \log\big (1+\exp(\beta' x_i+\alpha)\big)  \Big\}
+$$
+
+Equation de vraisemblance 
+
+$$
+\forall (\beta, \alpha), P(\theta;\{(x;z_i);i : 1,...,n\}) = O_{R^{d+1}}
+$$
+
+En pratique, on ne sait pas résoudre (*) à la main 
+
+Résolution de équation de vraisemblance :
+- en utilisation de fonction glm de R (voir exemple souvant ) 
+-  en utilisant une fonction d'ompimisation plus générale (option de R)
+
+Un exemple : 
+
+|Salaire|âge|classe|
+|:---|:---|:---|
+|1,7|28|A|
+|2,2|38|B|
+|3,4|43|B|
+|3,5|54|A|
+
+A quelle classe M. martin affect t elle? M. martin: slaire = 2,1; âge 34.
+```{r}
+# donnees
+# http://alexandrelourme.free.fr/M2IREF/SCORING/LRscript
+train=data.frame(sal=c(17,22,34,35)/10,age=c(28,38,43,54),classe=c('A','B','B','A')) ; attach(train) # train data
+test=data.frame(sal=2.1,age=34) # test data
+```
+
+```{r}
+# plots
+
+plot(sal,age,cex=2,col=as.factor(classe),pch=as.character(classe)) # train data
+points(test,pch=19,cex=2,col='green') # test data
+
+# Logistic Regression with glm 
+
+rule=glm(as.factor(classe)~sal+age,family=binomial(link='logit')) # model parameter inference
+rule$coefficients # estimation of alpha = rule$coefficients[1] ; estimation of beta_1 = rule$coefficients[2] ; estimation of beta_2 = rule$coefficients[3]
+abline(a=-rule$coefficients[1]/rule$coefficients[3],b=-rule$coefficients[2]/rule$coefficients[3]) # discriminant rule
+
+#a = intercept 
+#b = la pente
+
+score <- predict(rule,new=test) ; print(score) # the value of :  beta_1*sal + beta_2*age + alpha computed on the test data #-1.17 il est négatif, donc le Mmartin est dans classe 2. 
+prob <- exp(score)/(1+exp(score)) ; print(prob) # probability of belonging to Class 1, 属于classe 2的概率是55%，所以是classe 2.
+
+predict(rule,new=data.frame(sal=sal,age=age)) # the value of  : beta_1*sal + beta_2*age + alpha computed on the train data : the test data is estimated in the same class as data points 1, 2, 4.
+# On préfère l'érreur de classe plus miminum
+
+# Logistic Regression with optim
+
+mll <- function(data,para){out=0
+for (i in 1:4){sci=para[1]*data[i,1]+para[2]*data[i,2]+para[3] # para[1]=beta_1 (sal) ; para[2]=beta_2 (age) ; para[3]=alpha
+out=out+sci*(data[i,3]=='B')-log(1+exp(sci))}
+return(-out)}  #  maximizing the log-likelihood <=> minimising the opposite of the log-likelihood
+
+res <- optim(par=c(3,1,2),fn=mll,data=train) # the LR parameters are within res$par
+res$par # res$par[1]=alpha_1 ; res$par[1]=beta_1 ;  res$par[2]=beta_2 ; res$par[3]=alpha
+abline(a=-res$par[3]/res$par[2],b=-res$par[1]/res$par[2],col='red') # the discriminant rule 
+
+prob <- function(data){sal=data[1]; age=data[2];lin=res$par[1]*sal+res$par[2]*age+res$par[3];exp(lin)/(1+exp(lin))} # the probability function
+
+prob(test) # probability for the test data to belong to class 1
+
+prob(train) # probabilities that train data belong to Class 1
+
+```
+
+
+$$
+S(M.Martin)=\hat \alpha +\hat\beta_1 \times 2 , 1 + \hat\beta_2 \times 34
+$$
+
+
+Comment savoir si 
+
+$$
+[\underbrace{\hat1 \leftrightarrow \hat A\ et\ \hat 2 \leftrightarrow B}_{Choix\ 1} ]\ ou \ [\underbrace{\hat1 \leftrightarrow B \ et\ \hat 2 \leftrightarrow A}_{Choix\ 2}]
+$$
+
+|Salaire|Âge|Classe estimée|Classe estimée|
+|:--|:--|:----:|:----:|
+|1,7|28|$\hat B$|$\hat A$|
+|2,2|38|$\hat B$|$\hat A$|
+|3,4|43|$\hat A$|$\hat B$|
+|3,5|54|$\hat B$|$\hat A$|
+|||Erreur de classement|Erreur de classement|
+|||75%|25%|
+
+$$
+S(x) = 0\\
+\alpha + R_1 (salaire)+R_2(\hat age) = 0\\
+\hat age = -\frac{\beta_1}{\beta_2}\\
+Salaire = -\frac{\alpha}{\beta}
+$$
+M. Martin est estimer dans la classe A
+
+# Contrôle Scoring prochaine séance, Chapitr 1-2 , 1h30, Judi prochaine 13h15, 取代actuariat , 可以使用电脑
+# Projet 2 
+
+
+
